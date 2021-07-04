@@ -3,7 +3,6 @@ import numpy
 import cv2
 import sklearn.model_selection
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dropout, Dense
-import matplotlib.pyplot as plt
 
 from tensorflow import keras
 
@@ -59,13 +58,11 @@ def main():
 
     model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(MaxPooling2D(2, 2))
-    #ovde dropout?
+
     model.add(Flatten())
     model.add(Dropout(0.5))
 
     model.add(Dense(512, activation='relu'))
-    #izmedju dropout?
-    #klase
     model.add(Dense(6, activation='softmax'))
     model.build(input_shape)
     model.summary()
@@ -75,69 +72,19 @@ def main():
                   metrics=['accuracy'])
 
     model.fit(x_train, y_train, epochs=8, validation_data=(x_test, y_test))
-    #OVDE MENJATI EPOHE I VALIDATION
+    #model.fit(x_train, y_train, epochs=1, validation_data=(x_test, y_test))
+
+
+    model.save('D:/6semestar/ORI/MojProj/cnn_ships/saved_model/SavedModel')
+
+
+    #model = keras.models.load_model('path/to/location')
+
+    #images, categories = import_data('D:/6semestar/ORI/MojProj/cnn_ships/sample_submission_ns2btKE')
 
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
-
-
-    model = keras.models.load_model('D:/6semestar/ORI/MojProj/cnn_ships/saved_model/Cnn_Ships.h5')
-    print(model.summary())
-
-    images, categories = import_data('D:/6semestar/ORI/MojProj/cnn_ships/test_ApKoW4T')
-    predictions = model.predict(images)
-
-    categories_dict = {}
-    categories_dict[1] = 'Cargo'
-    categories_dict[2] = 'Military'
-    categories_dict[3] = 'Carrier'
-    categories_dict[4] = 'Cruise'
-    categories_dict[5] = 'Tankers'
-
-    num_of_predictions = len(predictions)
-
-    for pred in range(num_of_predictions):
-        bingo = categories_dict[numpy.argmax(predictions[pred])]
-        print('Prediction: ' + bingo)
-
-    images, categories = import_data('D:/6semestar/ORI/MojProj/cnn_ships/sample_submission_ns2btKE')
-    predictions = model.predict(images)
-
-    variable = 0
-    print(categories_dict[categories[variable]]) #exc?
-    plt.imshow(images[variable])
-    plt.xlabel('Actual: ' + categories_dict[categories[variable]])
-    plt.ylabel('Predicted: ' + categories_dict[numpy.argmax(predictions[variable])])
-    plt.show()
-
-
-
-
-    #faks
-    # model = Sequential()
-    # model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape))
-    # model.add(Conv2D(64, (3, 3), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout(0.25))
-    # model.add(Flatten())
-    # model.add(Dense(128, activation='relu'))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(num_classes, activation='softmax'))
-    # model.summary()
-    #
-    # # kompajliranje modela za multiklasnu klasifikaciju
-    # model.compile(loss=keras.losses.categorical_crossentropy,
-    #               optimizer=keras.optimizers.Adadelta(),
-    #               metrics=['accuracy'])
-    #
-    # # treniranje i evaluacija
-    # model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(x_test, y_test))
-    # # ispis rezultata
-    # score = model.evaluate(x_test, y_test, verbose=0)
-    # print('Test loss:', score[0])
-    # print('Test accuracy:', score[1])
-
 
 
 
